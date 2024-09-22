@@ -1,8 +1,10 @@
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catizen Price Predictor</title>
+    <title>Hamster Kombat Price Predictor</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -121,17 +123,17 @@
     </style>
 </head>
 <body>
-    <header>
+   <header>
         <a>W-Creative</a>
     </header>
     <div class="container">
-        <h1>Catizen Price Predictor</h1>
-        <p>Prediksi harga token Catizen berdasarkan MCAP dan FDV token NOT, DOGS dan Premarket</p>
+        <h1>Hamster Kombat Price Predictor</h1>
+        <p>Prediksi harga token Hamster Kombat berdasarkan MCAP token DOGS, CATI dan Premarket</p>
         <input type="number" id="tokenInput" placeholder="Masukkan jumlah token yang Anda miliki">
         <button onclick="calculatePrice()">Hitung</button>
         <div class="results" id="results"></div>
     </div>
-    <footer>
+<footer>
         <div class="footer-links">
           <p>Credit</p>
           <ul>
@@ -141,14 +143,14 @@
     </footer>
 
     <script>
-        // Total supply of Catizen token
-        const totalSupply = 305000000;
-        const fdv = 1000000000;
+        // Total supply of Hamster Kombat token
+        const totalSupply = 64375000000;
+        const fdv = 100000000000;
 
         // API URLs for getting market cap data from CoinPaprika and lastPrice
-        const notCoinUrl = "https://api.coinpaprika.com/v1/tickers/not-notcoin";
         const dogsCoinUrl = "https://api.coinpaprika.com/v1/tickers/dogs-dogs";
-        const premarketUrl = "https://cati-last-price-api.vercel.app/api/lastPrice";
+        const catiCoinUrl = "https://api.coinpaprika.com/v1/tickers/cati-catizen";
+        const premarketUrl = "https://hamster-price-api.vercel.app/api/lastPrice";
 
         // Function to get market cap for a specific coin
         async function getMarketCap(url) {
@@ -180,50 +182,51 @@
 
             if (!isNaN(tokensOwned)) {
                 // Fetch market cap for NOT, DOGS and premarket price
-                const mcapNot = await getMarketCap(notCoinUrl);
                 const mcapDogs = await getMarketCap(dogsCoinUrl);
+                const mcapCati = await getMarketCap(catiCoinUrl);
                 const lastPricePremarket = await getPremarketPrice(premarketUrl);
 
-                if (mcapNot && mcapDogs && lastPricePremarket) {
+                if (mcapDogs && mcapCati && lastPricePremarket) {
                     // Calculate price per token and total value for both NOT and DOGS
-                    const pricePerTokenNot = mcapNot / totalSupply;
-                    const totalDollarsNot = tokensOwned * pricePerTokenNot;
 
                     const pricePerTokenDogs = mcapDogs / totalSupply;
                     const totalDollarsDogs = tokensOwned * pricePerTokenDogs;
+
+                    const pricePerTokenCati = mcapCati / totalSupply;
+                    const totalDollarsCati = tokensOwned * pricePerTokenCati;
 
                     // Calculate total value using premarket lastPrice
                     const marketcapPremarket = lastPricePremarket * totalSupply;
                     const totalDollarsPremarket = tokensOwned * lastPricePremarket;
 
                     // FDV
-                    const notFdv = Math.round(pricePerTokenNot * fdv);
                     const dogsFdv = Math.round(pricePerTokenDogs * fdv);
+                    const catiFdv = Math.round(pricePerTokenCati * fdv);
                     const premarketFdv = Math.round(lastPricePremarket * fdv);
 
                     // Display results
                     const resultsDiv = document.getElementById('results');
                     resultsDiv.innerHTML = `
                         <div class="session">
-                            <strong>Hasil berdasarkan MCAP NOT</strong><br>
-                            Market Cap NOT = $${mcapNot.toLocaleString()}<br>
-                            FDV NOT = $${notFdv.toLocaleString()}<br>
-                            Harga per token = $${pricePerTokenNot.toFixed(2)}<br>
-                            Anda memiliki token senilai = $${totalDollarsNot.toFixed(2)}
-                        </div>
-                        <div class="session">
                             <strong>Hasil berdasarkan MCAP DOGS</strong><br>
                             Market Cap DOGS = $${mcapDogs.toLocaleString()}<br>
                             FDV DOGS = $${dogsFdv.toLocaleString()}<br>
-                            Harga per token = $${pricePerTokenDogs.toFixed(2)}<br>
-                            Anda memiliki token senilai = $${totalDollarsDogs.toFixed(2)}
+                            Harga per token = $${pricePerTokenDogs.toFixed(4)}<br>
+                            Anda memiliki token senilai = $${totalDollarsDogs.toFixed(3)}
+                        </div>
+                        <div class="session">
+                            <strong>Hasil berdasarkan MCAP CATI</strong><br>
+                            Market Cap CATI = $${mcapCati.toLocaleString()}<br>
+                            FDV CATI = $${catiFdv.toLocaleString()}<br>
+                            Harga per token = $${pricePerTokenCati.toFixed(4)}<br>
+                            Anda memiliki token senilai = $${totalDollarsCati.toFixed(3)}
                         </div>
                         <div class="session">
                             <strong>Hasil berdasarkan Premarket</strong><br>
                             Market Cap Premarket = $${marketcapPremarket.toLocaleString()}<br>
                             FDV Premarket = $${premarketFdv.toLocaleString()}<br>
-                            Harga per token = $${lastPricePremarket.toFixed(2)}<br>
-                            Anda memiliki token senilai = $${totalDollarsPremarket.toFixed(2)}
+                            Harga per token = $${lastPricePremarket.toFixed(4)}<br>
+                            Anda memiliki token senilai = $${totalDollarsPremarket.toFixed(3)}
                         </div>
                     `;
                 } else {
