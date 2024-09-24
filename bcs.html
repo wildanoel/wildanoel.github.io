@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bybit Coinsweeper Auto Referral</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 300px;
+            border: 1px solid green;
+            background-color: black;
+            color: green;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: 1px solid green;
+            background-color: black;
+            color: green;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: green;
+            color: black;
+        }
+
+        #processing {
+            color: yellow;
+            margin-top: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Bybit Coinsweeper Auto Referral</h1>
+        <form id="loginForm">
+            <input type="text" name="referredBy" placeholder="Enter Referred By" required>
+            <button type="submit">Inject Reff</button>
+        </form>
+        <div id="processing" style="display:none;">Processing...</div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                $('#processing').show();
+                $('#result').empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'index.php',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#processing').hide();
+                        if (response.status === 'success') {
+                            $('#result').text('Sukses inject reff!');
+                        } else {
+                            $('#result').text(response.message);
+                        }
+                    },
+                    error: function() {
+                        $('#processing').hide();
+                        $('#result').text('Error dalam proses.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
